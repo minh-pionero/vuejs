@@ -18,5 +18,9 @@ export const ROUTER_NAME = {
   notFound: {
     name: 'Not found',
     path: '/:catchAll(.*)'
+  },
+  login: {
+    name: 'Login',
+    path: '/login'
   }
 }

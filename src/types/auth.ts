@@ -13,4 +13,5 @@ export type AuthType = {
 export type LoginType = {
   email: string
   password: string
+  isRemember?: boolean
 }

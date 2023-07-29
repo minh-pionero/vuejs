@@ -5,6 +5,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import OverviewPage from '@/views/OverviewPage.vue'
 import ProductPage from '@/views/ProductPage.vue'
 import MediaPage from '@/views/MediaPage.vue'
+import LoginPage from '@/views/LoginPage.vue'
 import NotFoundPage from '@/views/NotFoundPage.vue'
 
 const router = createRouter({
@@ -36,6 +37,11 @@ const router = createRouter({
       path: ROUTER_NAME.notFound.path,
       name: ROUTER_NAME.notFound.name,
       component: NotFoundPage
+    },
+    {
+      path: ROUTER_NAME.login.path,
+      name: ROUTER_NAME.login.name,
+      component: LoginPage
     }
   ]
 })

@@ -1,7 +1,10 @@
 import Cookies from 'js-cookie'
+import { toast } from 'vue3-toastify'
 
 import { type LoginType, type UserType } from '@/types/auth'
 import { loginApi } from '@/services/auth.service'
+import router from '@/router'
+import { ROUTER_NAME } from '@/constants/path'
 
 interface IAuthState {
   user: UserType | null
@@ -43,10 +46,12 @@ export default {
     async login({ commit }: { commit: Function }, payload: LoginType) {
       try {
         const response = await loginApi(payload)
-        commit('SET_USER', response.user)
-        commit('SET_TOKEN', { token: response.token })
+        router.push({ path: ROUTER_NAME.overview.path, replace: true })
+        // commit('SET_USER', response.user)
+        commit('SET_TOKEN', { token: response.access_token, remember: payload.isRemember })
+        toast.success('Logged in successfully')
       } catch (error) {
-        console.error('Error:', error)
+        toast.error('Login failed')
       }
     }
   }
