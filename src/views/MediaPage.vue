@@ -1,3 +1,6 @@
+<script setup lang="ts">
+import MediaLayout from '@/components/media/MediaLayout.vue'
+</script>
 <template>
-  <div>Media</div>
+  <MediaLayout />
 </template>
