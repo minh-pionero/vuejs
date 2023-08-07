@@ -12,7 +12,7 @@ interface IAuthState {
 }
 
 export default {
-  namespace: true,
+  namespaced: true,
   state(): IAuthState {
     return {
       user: null,

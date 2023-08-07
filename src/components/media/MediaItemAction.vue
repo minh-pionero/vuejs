@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import MediaRenameDialog from '@/components/media/MediaRenameDialog.vue'
+import { ref, type PropType } from 'vue'
+import { useStore } from '@/store/useStore'
 
-defineProps({
+import MediaRenameDialog from '@/components/media/MediaRenameDialog.vue'
+import type { MediaItemType } from '@/types/media.type'
+import { MediaActionTypes } from '@/store/modules/media/actions'
+
+const store = useStore('media')
+
+const props = defineProps({
   activator: {
     type: String
+  },
+  mediaItem: {
+    type: Object as PropType<MediaItemType>,
+    required: true
   }
 })
 
@@ -24,7 +34,7 @@ const isOpenRenameDialog = ref<boolean>(false)
 const onClickMenu = (item: MenuItemType) => {
   switch (item.type) {
     case 'OPEN':
-      //
+      store.dispatch(MediaActionTypes.HANDLE_SELECT_DIRECTORY, props.mediaItem)
       break
     case 'RENAME':
       isOpenRenameDialog.value = true

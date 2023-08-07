@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/store/useStore'
 
 const email = ref('')
 const password = ref('')
 const isRememberLogin = ref(false)
-const store = useStore()
+const store = useStore('auth')
 
-const submit = async () => {
-  await store.dispatch('login', {
+const submit = () => {
+  store.dispatch('login', {
     email: email.value,
     password: password.value,
     isRemember: isRememberLogin.value

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ref } from 'vue'
+
 import { type MediaItemType } from '@/types/media.type'
 import MediaItemAction from '@/components/media/MediaItemAction.vue'
 
@@ -10,7 +10,6 @@ defineProps({
     required: true
   }
 })
-
 </script>
 
 <template>
@@ -28,7 +27,7 @@ defineProps({
     </div>
     <div class="text-center break-word">{{ item.title }}</div>
   </div>
-  <MediaItemAction :activator="item.key" />
+  <MediaItemAction :activator="item.key" :media-item="item" />
 </template>
 
 <style scoped>

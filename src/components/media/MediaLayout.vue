@@ -1,27 +1,20 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { useStore } from '@/store/useStore'
+import { computed, onMounted } from 'vue'
+// import {  mapGetters } from 'vuex'
+// import useStoreModule from '@/store/storeModule'
+
 import MediaItem from '@/components/media/MediaItem.vue'
 import MediaHeader from '@/components/media/MediaHeader.vue'
-import { type MediaItemType } from '@/types/media.type'
-import { getDirectoriesApi } from '@/services/media.service'
+import { MediaActionTypes, type IMediaActions } from '@/store/modules/media/actions'
 
-const directories = ref<MediaItemType[]>([])
-const isLoading = ref<boolean>(false)
-
-const getDirectories = async () => {
-  try {
-    isLoading.value = true
-    const { data } = await getDirectoriesApi()
-    directories.value = data
-  } catch (e) {
-    //
-  } finally {
-    isLoading.value = false
-  }
-}
+const store = useStore('media')
+const directories = computed(() => store.getters('directories'))
+const isLoading = computed(() => store.getters('isLoading'))
 
 onMounted(() => {
-  getDirectories()
+  store.dispatch(MediaActionTypes.GET_DIRECTORIES)
+  // getDirectories()
 })
 </script>
 

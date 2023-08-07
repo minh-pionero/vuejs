@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import { ROUTER_NAME } from '@/constants/path'
-import MainLayout from '@/layouts/MainLayout.vue'
-import OverviewPage from '@/views/OverviewPage.vue'
-import ProductPage from '@/views/ProductPage.vue'
-import MediaPage from '@/views/MediaPage.vue'
-import LoginPage from '@/views/LoginPage.vue'
-import NotFoundPage from '@/views/NotFoundPage.vue'
+const MainLayout = () => import('@/layouts/MainLayout.vue')
+const OverviewPage = () => import('@/views/OverviewPage.vue')
+const ProductPage = () => import('@/views/ProductPage.vue')
+const MediaPage = () => import('@/views/MediaPage.vue')
+const LoginPage = () => import('@/views/LoginPage.vue')
+const NotFoundPage = () => import('@/views/NotFoundPage.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
