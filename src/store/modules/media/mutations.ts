@@ -1,6 +1,6 @@
-import { MutationTree } from 'vuex'
-import { MediaStateType } from './states'
-import { MediaItemType } from '@/types/media.type'
+import type { MutationTree } from 'vuex'
+import type { MediaStateType } from './states'
+import type { MediaItemType } from '@/types/media.type'
 
 export enum MediaMutationTypes {
   SET_IS_LOADING = '[MEDIA] SET_IS_LOADING',

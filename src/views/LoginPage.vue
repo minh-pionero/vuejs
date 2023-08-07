@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from '@/store/useStore'
+import { AuthActionTypes } from '@/store/modules/auth/actions'
+import { onBeforeMount } from 'vue'
 
-const email = ref('')
-const password = ref('')
+const email = ref('admin@luuminh.id.vn')
+const password = ref('password')
 const isRememberLogin = ref(false)
 const store = useStore('auth')
 
+const isLoading = computed(() => store.getters('isLoading'))
+
+onBeforeMount(() => {
+  localStorage.clear()
+})
+
 const submit = () => {
-  store.dispatch('login', {
+  store.dispatch(AuthActionTypes.LOGIN, {
     email: email.value,
     password: password.value,
     isRemember: isRememberLogin.value
@@ -32,7 +40,9 @@ const submit = () => {
           <v-checkbox v-model="isRememberLogin" label="Remember me" />
           <router-link to="/" class="mb-6">Forgot password</router-link>
         </div>
-        <v-btn type="submit" block class="mt-2" size="45">Submit</v-btn>
+        <v-btn type="submit" block class="mt-2" size="45" :loading="isLoading" :disabled="isLoading"
+          >Submit</v-btn
+        >
       </v-form>
     </v-card>
   </div>

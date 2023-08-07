@@ -1,4 +1,4 @@
-import { MediaItemType } from '@/types/media.type'
+import type { MediaItemType } from '@/types/media.type'
 
 export type MediaStateType = {
   isLoading: boolean

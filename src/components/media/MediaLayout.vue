@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { useStore } from '@/store/useStore'
 import { computed, onMounted } from 'vue'
-// import {  mapGetters } from 'vuex'
-// import useStoreModule from '@/store/storeModule'
 
 import MediaItem from '@/components/media/MediaItem.vue'
 import MediaHeader from '@/components/media/MediaHeader.vue'
-import { MediaActionTypes, type IMediaActions } from '@/store/modules/media/actions'
+import { MediaActionTypes } from '@/store/modules/media/actions'
+import { useStore } from '@/store/useStore'
 
 const store = useStore('media')
 const directories = computed(() => store.getters('directories'))
@@ -14,7 +12,6 @@ const isLoading = computed(() => store.getters('isLoading'))
 
 onMounted(() => {
   store.dispatch(MediaActionTypes.GET_DIRECTORIES)
-  // getDirectories()
 })
 </script>
 

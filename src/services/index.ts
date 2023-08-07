@@ -21,7 +21,7 @@ client.interceptors.request.use(
       config.url = newUrl
     }
 
-    const accessToken = Cookies.get('token')
+    const accessToken = localStorage.getItem('token')
     const cloneConfig = { ...config }
     if (accessToken) {
       cloneConfig.headers.authorization = `Bearer ${accessToken}`

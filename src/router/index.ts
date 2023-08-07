@@ -1,49 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { ROUTER_NAME } from '@/constants/path'
-const MainLayout = () => import('@/layouts/MainLayout.vue')
-const OverviewPage = () => import('@/views/OverviewPage.vue')
-const ProductPage = () => import('@/views/ProductPage.vue')
-const MediaPage = () => import('@/views/MediaPage.vue')
-const LoginPage = () => import('@/views/LoginPage.vue')
-const NotFoundPage = () => import('@/views/NotFoundPage.vue')
+import routes from '@/router/routes'
+import store from '@/store'
+import middlewarePipeline from '@/middleware/middlewarePipeline'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: ROUTER_NAME.root.path,
-      name: ROUTER_NAME.root.name,
-      component: MainLayout,
-      children: [
-        {
-          path: ROUTER_NAME.overview.path,
-          name: ROUTER_NAME.overview.name,
-          component: OverviewPage
-        },
-        {
-          path: ROUTER_NAME.product.path,
-          name: ROUTER_NAME.product.name,
-          component: ProductPage
-        },
-        {
-          path: ROUTER_NAME.media.path,
-          name: ROUTER_NAME.media.name,
-          component: MediaPage
-        }
-      ]
-    },
-    {
-      path: ROUTER_NAME.notFound.path,
-      name: ROUTER_NAME.notFound.name,
-      component: NotFoundPage
-    },
-    {
-      path: ROUTER_NAME.login.path,
-      name: ROUTER_NAME.login.name,
-      component: LoginPage
-    }
-  ]
+  history: createWebHistory(),
+  routes
+})
+
+router.beforeEach((to, from, next) => {
+  store.dispatch('setIsLoading', true)
+
+  if (!to.meta.middleware) {
+    return next()
+  }
+
+  const { middleware } = to.meta as any
+
+  const context = {
+    to,
+    from,
+    store,
+    next
+  }
+
+  return middleware[0]({
+    ...context,
+    next: middlewarePipeline(context, middleware, 1)
+  })
+})
+
+router.afterEach(() => {
+  store.dispatch('setIsLoading', false)
 })
 
 export default router
