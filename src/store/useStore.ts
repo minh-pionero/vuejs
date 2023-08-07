@@ -1,5 +1,5 @@
-import { Dispatch, Store, useStore as baseUseStore, mapGetters, mapActions } from 'vuex'
-import { RootStateTypes, storeKey } from '.'
+import { useStore as baseUseStore } from 'vuex'
+import { storeKey } from '.'
 
 // Provide custom useStore function with correct types
 export const useStore = (moduleName?: 'media' | 'auth') => {
