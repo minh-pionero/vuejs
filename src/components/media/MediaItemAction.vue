@@ -34,7 +34,8 @@ const isOpenRenameDialog = ref<boolean>(false)
 const onClickMenu = (item: MenuItemType) => {
   switch (item.type) {
     case 'OPEN':
-      store.dispatch(MediaActionTypes.HANDLE_SELECT_DIRECTORY, props.mediaItem)
+      if (props.mediaItem?.children)
+        store.dispatch(MediaActionTypes.HANDLE_SELECT_DIRECTORY, props.mediaItem)
       break
     case 'RENAME':
       isOpenRenameDialog.value = true
