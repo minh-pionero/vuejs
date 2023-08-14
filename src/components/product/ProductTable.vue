@@ -1,7 +1,21 @@
 <script setup lang="ts">
-import ProductTableRow from '@/components/product/ProductTableRow.vue'
+import type { PropType } from 'vue'
 
-const products = [1, 2, 3, 4, 5]
+import ProductTableRow from '@/components/product/ProductTableRow.vue'
+import type { ProductType } from '@/types/product.type'
+
+defineProps({
+  isLoading: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  products: {
+    type: Array as PropType<ProductType[]>,
+    required: true,
+    default: () => []
+  }
+})
 </script>
 
 <template>
@@ -16,11 +30,19 @@ const products = [1, 2, 3, 4, 5]
       </tr>
     </thead>
     <tbody>
-      <template v-for="product in products" :key="product">
-        <ProductTableRow />
+      <template v-if="isLoading">
+        <tr>
+          <td colspan="5">
+            <div class="text-center my-16">
+              <v-progress-circular :size="50" indeterminate></v-progress-circular>
+            </div>
+          </td>
+        </tr>
+      </template>
+      <template v-else v-for="product in products" :key="product">
+        <ProductTableRow :product="product" />
       </template>
     </tbody>
-    <template></template>
   </v-table>
 </template>
 

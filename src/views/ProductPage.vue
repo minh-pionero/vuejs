@@ -3,17 +3,22 @@ import { onMounted, ref } from 'vue'
 import ProductTable from '@/components/product/ProductTable.vue'
 import ProductEditDialog from '@/components/product/ProductEditDialog.vue'
 import { getProductsApi } from '@/services/product.service'
+import type { ResponseProductType } from '@/types/product.type'
 
+const isLoading = ref<boolean>(false)
 const isOpenCreateProductDialog = ref(false)
 const page = ref(1)
-const products = ref([])
+const responseProducts = ref<ResponseProductType>()
 
 const getProducts = async () => {
   try {
-    const { data } = await getProductsApi()
-    products.value = data
+    isLoading.value = true
+    const res = await getProductsApi()
+    responseProducts.value = res
   } catch (e) {
     //
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -34,7 +39,7 @@ onMounted(() => {
       >Create product</v-btn
     >
   </div>
-  <ProductTable />
+  <ProductTable :products="responseProducts?.data ?? []" :is-loading="isLoading" />
   <div class="d-flex justify-end mt-2">
     <VPagination v-model="page" :length="15" :total-visible="7" size="40" />
   </div>
