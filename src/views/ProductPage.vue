@@ -4,16 +4,17 @@ import ProductTable from '@/components/product/ProductTable.vue'
 import ProductEditDialog from '@/components/product/ProductEditDialog.vue'
 import { getProductsApi } from '@/services/product.service'
 import type { ResponseProductType } from '@/types/product.type'
+import { watch } from 'vue'
 
 const isLoading = ref<boolean>(false)
 const isOpenCreateProductDialog = ref(false)
 const page = ref(1)
 const responseProducts = ref<ResponseProductType>()
 
-const getProducts = async () => {
+const getProducts = async (page?: number) => {
   try {
     isLoading.value = true
-    const res = await getProductsApi()
+    const res = await getProductsApi(page ?? 0)
     responseProducts.value = res
   } catch (e) {
     //
@@ -24,6 +25,10 @@ const getProducts = async () => {
 
 onMounted(() => {
   getProducts()
+})
+
+watch(page, (val) => {
+  getProducts(val)
 })
 </script>
 
@@ -40,8 +45,13 @@ onMounted(() => {
     >
   </div>
   <ProductTable :products="responseProducts?.data ?? []" :is-loading="isLoading" />
-  <div class="d-flex justify-end mt-2">
-    <VPagination v-model="page" :length="15" :total-visible="7" size="40" />
+  <div class="d-flex justify-end mt-2" v-if="responseProducts?.meta.last_page">
+    <VPagination
+      v-model="page"
+      :length="responseProducts?.meta.last_page"
+      :total-visible="7"
+      :size="40"
+    />
   </div>
 
   <ProductEditDialog
@@ -51,5 +61,6 @@ onMounted(() => {
         isOpenCreateProductDialog = false
       }
     "
+    :on-refresh-products="getProducts"
   />
 </template>
