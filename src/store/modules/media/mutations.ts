@@ -23,6 +23,5 @@ export const mediaMutations: MutationTree<MediaStateType> & MediaMutations = {
   },
   [MediaMutationTypes.SET_SELECTED_DIRECTORY](state: MediaStateType, payload: MediaItemType) {
     state.selectedDirectory = payload
-    // state.selectedPath = payload.selectedPath ?? 'uploads'
   }
 }

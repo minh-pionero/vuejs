@@ -1,19 +1,29 @@
+<script setup lang="ts">
+import type { ProductType } from '@/types/product.type'
+import type { PropType } from 'vue'
+defineProps({
+  product: {
+    type: Object as PropType<ProductType>,
+    required: true
+  }
+})
+</script>
+
 <template>
   <tr>
-    <td>1</td>
+    <td>{{ product.categoryId }}</td>
     <td>
       <div class="py-2">
-        <VImg
-          src="https://vcdn-dulich.vnecdn.net/2020/09/04/1-Meo-chup-anh-dep-khi-di-bien-9310-1599219010.jpg"
-          width="150"
-        />
+        <VImg :src="product.thumbnail" width="150" />
       </div>
     </td>
-    <td>3</td>
-    <td>4</td>
+    <td>{{ product.name }}</td>
+    <td>{{ product.price }}</td>
     <td>
-      <VBtn color="orange" class="mr-2" icon="mdi-square-edit-outline" />
-      <VBtn color="red" icon="mdi-trash-can-outline" />
+      <div class="d-flex">
+        <VBtn color="orange" class="mr-2"><VIcon icon="mdi-square-edit-outline" /></VBtn>
+        <VBtn color="red"><VIcon icon="mdi-trash-can-outline" /> </VBtn>
+      </div>
     </td>
   </tr>
 </template>
