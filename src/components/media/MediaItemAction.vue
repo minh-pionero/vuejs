@@ -4,7 +4,7 @@ import { useStore } from '@/store/useStore'
 
 import MediaRenameDialog from '@/components/media/MediaRenameDialog.vue'
 import type { MediaItemType } from '@/types/media.type'
-import { MediaActionTypes } from '@/store/modules/media/actions'
+import { EMediaAction } from '@/store/modules/media'
 
 const store = useStore('media')
 
@@ -35,7 +35,7 @@ const onClickMenu = (item: MenuItemType) => {
   switch (item.type) {
     case 'OPEN':
       if (props.mediaItem?.children)
-        store.dispatch(MediaActionTypes.HANDLE_SELECT_DIRECTORY, props.mediaItem)
+        store.dispatch(EMediaAction.HANDLE_SELECT_DIRECTORY, props.mediaItem)
       break
     case 'RENAME':
       isOpenRenameDialog.value = true
@@ -61,9 +61,9 @@ const onClickMenu = (item: MenuItemType) => {
     </v-list>
   </v-menu>
   <template v-if="isOpenRenameDialog">
-    <MediaRenameDialog
+    <!-- <MediaRenameDialog
       :is-open="isOpenRenameDialog"
       :on-close="() => (isOpenRenameDialog = false)"
-    />
+    /> -->
   </template>
 </template>
