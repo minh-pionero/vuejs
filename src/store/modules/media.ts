@@ -3,7 +3,13 @@ import type { Module } from 'vuex'
 import type { RootStateTypes } from '@/store'
 import { toast } from 'vue3-toastify'
 import { ERROR_MESSAGE } from '@/constants/messages'
-import { createFolderApi, getDirectoriesApi, saveFileApi } from '@/services/media.service'
+import {
+  createFolderApi,
+  deleteFileAndFolderApi,
+  getDirectoriesApi,
+  renameFileAndFolderApi,
+  saveFileApi
+} from '@/services/media.service'
 
 type MediaStateType = {
   isLoading: boolean
@@ -31,7 +37,9 @@ export enum EMediaAction {
   GET_DIRECTORIES = 'GET_DIRECTORIES',
   HANDLE_SELECT_DIRECTORY = 'HANDLE_SELECT_DIRECTORY',
   CREATE_FOLDER = 'CREATE_FOLDER',
-  UPLOAD_FILE = 'UPLOAD_FILE'
+  UPLOAD_FILE = 'UPLOAD_FILE',
+  DELETE_FILE_OR_FOLDER = 'DELETE_FILE_OR_FOLDER',
+  RENAME_FILE_OF_FOLDER = 'RENAME_FILE_OF_FOLDER'
 }
 
 const mediaModule: Module<MediaStateType, RootStateTypes> = {
@@ -94,6 +102,30 @@ const mediaModule: Module<MediaStateType, RootStateTypes> = {
       try {
         commit(EMediaMutation.SET_IS_SUBMITTING, true)
         const res = await saveFileApi(payload)
+        if (res?.message) toast.info(res.message)
+        dispatch(EMediaAction.GET_DIRECTORIES)
+      } catch (e) {
+        toast.error(ERROR_MESSAGE.SUBMIT)
+      } finally {
+        commit(EMediaMutation.SET_IS_SUBMITTING, false)
+      }
+    },
+    async [EMediaAction.DELETE_FILE_OR_FOLDER]({ commit, dispatch }, payload) {
+      try {
+        commit(EMediaMutation.SET_IS_SUBMITTING, true)
+        const res = await deleteFileAndFolderApi(payload)
+        if (res?.message) toast.info(res.message)
+        dispatch(EMediaAction.GET_DIRECTORIES)
+      } catch (e) {
+        toast.error(ERROR_MESSAGE.SUBMIT)
+      } finally {
+        commit(EMediaMutation.SET_IS_SUBMITTING, false)
+      }
+    },
+    async [EMediaAction.RENAME_FILE_OF_FOLDER]({ commit, dispatch }, payload) {
+      try {
+        commit(EMediaMutation.SET_IS_SUBMITTING, true)
+        const res = await renameFileAndFolderApi(payload)
         if (res?.message) toast.info(res.message)
         dispatch(EMediaAction.GET_DIRECTORIES)
       } catch (e) {

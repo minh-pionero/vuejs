@@ -24,8 +24,8 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import TreeView from './TreeView.vue'
 import { ref } from 'vue'
+import TreeView from './TreeView.vue'
 
 const props = defineProps({
   treeItem: {
@@ -43,7 +43,7 @@ const isOpenFolder = ref<boolean>(false)
 const handleClickMenu = () => {
   isOpenFolder.value = !isOpenFolder.value
 
-  if (isOpenFolder.value && props.treeItem?.children) props.onClick?.(props.treeItem)
+  if (props.treeItem?.children) props.onClick?.(props.treeItem)
 }
 </script>
 

@@ -32,7 +32,13 @@ const handleSubmitCreateFolder = async (folderName: string) => {
 }
 
 const onChangeFile = (event: any) => {
-  // 
+  //
+  const payload = {
+    filePath: selectedDirectories?.value?.path ?? 'uploads',
+    file: event.target.files[0]
+  }
+
+  store.dispatch(EMediaAction.UPLOAD_FILE, payload)
 }
 
 const onClickUploadFile = () => {

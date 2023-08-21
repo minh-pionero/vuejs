@@ -4,6 +4,7 @@ import type { PropType } from 'vue'
 
 import { EMediaGetters } from '@/store/modules/media'
 import { useStore } from '@/store/useStore'
+import { onUpdated } from 'vue';
 
 const props = defineProps({
   isOpen: {
@@ -18,13 +19,18 @@ const props = defineProps({
   onSubmit: {
     type: Function as PropType<(value: string) => Promise<void>>,
     required: true
+  },
+  renameText: {
+    type: String,
+    required: false,
+    default: ''
   }
 })
 
 const emits = defineEmits(['onClose'])
 
 const store = useStore('media')
-const name = ref<string>('')
+const name = ref<string>(props.renameText)
 const isSubmitting = computed(() => store.getters(EMediaGetters.IS_SUBMITTING))
 
 const handleSubmit = async () => {
