@@ -1,0 +1,1 @@
+import{B as o,C as c}from"./index-057900fe.js";const d=e=>{const r=o(c);return{dispatch:(t,s)=>{let i=t;return e&&(i=`${e}/${t}`),r.dispatch(i,s)},getters:t=>{let s=t;return e&&(s=`${e}/${t}`),r.getters[s]}}};export{d as u};
