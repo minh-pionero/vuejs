@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import { useStore } from '@/store/useStore'
-import { EMediaGetters } from '@/store/modules/media/getters'
+import { EMediaGetters, EMediaAction } from '@/store/modules/media'
 import type { MediaItemType } from '@/types/media.type'
 
 const store = useStore('media')
@@ -31,7 +31,7 @@ const items = computed(() => {
 })
 
 const handleBackFolder = () => {
-  //
+  store.dispatch(EMediaAction.HANDLE_SELECT_DIRECTORY)
 }
 </script>
 
@@ -42,13 +42,12 @@ const handleBackFolder = () => {
         :disabled="!items.length"
         rounded="0"
         variant="text"
-        icon="mdi-chevron-left"
+        icon="mdi-home-outline"
         @click="handleBackFolder"
       />
     </div>
     <VDivider vertical />
     <div class="pl-2 d-flex align-center">
-      <VIcon icon="mdi-home-outline" />
       <v-breadcrumbs :items="items" class="py-1"></v-breadcrumbs>
     </div>
   </div>

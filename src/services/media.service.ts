@@ -28,7 +28,7 @@ export const renameFileAndFolderApi = (payload: { oldName: string; newName: stri
   return client.post('/directory/rename', form).then((res) => res.data)
 }
 
-export const deleteFileAndFolderApi = (payload: { path: string; isFolder: string }) => {
+export const deleteFileAndFolderApi = (payload: any) => {
   const form = new FormData()
   form.append('path', payload.path)
   form.append('isFolder', payload.isFolder)
