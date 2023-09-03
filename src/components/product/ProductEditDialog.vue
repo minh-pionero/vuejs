@@ -2,6 +2,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import { createProductApi, getProductCategoriesApi } from '@/services/product.service'
 import { useFormRules } from '@/utils/formRules'
+import MediaModal from '@/components/modals/MediaModal.vue'
 
 const props = defineProps({
   isOpenDialog: {
@@ -26,12 +27,13 @@ const props = defineProps({
 
 const { ruleRequired } = useFormRules()
 const isSubmitting = ref(false)
+const isOpenMediaDialog = ref(false)
 const categories = ref<Array<{ value: number; title: string }>>([])
 const formDefault = {
   name: null,
   category_id: null,
   price: null,
-  thumbnail: 'https://kenh14cdn.com/thumb_w/660/2020/7/17/brvn-15950048783381206275371.jpg',
+  thumbnail: '',
   images: '',
   is_active: true,
   short_description: '',
@@ -142,10 +144,21 @@ const resetForm = () => {
                   :rules="[ruleRequired]"
                 ></v-select>
                 <div class="mb-6">
-                  <v-btn> <VIcon icon="mdi-paperclip" />Choose Thumbnail </v-btn>
-                </div>
-                <div>
-                  <v-btn> <VIcon icon="mdi-paperclip" />Choose Images </v-btn>
+                  <div class="mb-6 flex justify-between align-center">
+                    <v-btn @click="isOpenMediaDialog = true">
+                      <VIcon icon="mdi-paperclip" />Choose Thumbnail
+                    </v-btn>
+
+                    <v-btn
+                      v-if="!!form.thumbnail"
+                      icon="mdi-trash-can-outline"
+                      class="text-red"
+                      @click="form.thumbnail = ''"
+                    />
+                  </div>
+                  <div v-if="!!form.thumbnail">
+                    <VImg :src="form.thumbnail" />
+                  </div>
                 </div>
               </v-col>
             </v-row>
@@ -154,4 +167,16 @@ const resetForm = () => {
       </v-form>
     </v-card>
   </v-dialog>
+  <MediaModal
+    :is-open="isOpenMediaDialog"
+    @on-close="isOpenMediaDialog = false"
+    :on-save="
+      (values:string[]) => {
+        if(values?.length)
+        {
+          form.thumbnail = values[0]
+        }
+      }
+    "
+  />
 </template>
