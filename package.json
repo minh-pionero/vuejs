@@ -12,6 +12,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@tanstack/vue-query": "^4.34.4",
     "@tinymce/tinymce-vue": "^5.1.0",
     "axios": "^1.4.0",
     "js-cookie": "^3.0.5",
