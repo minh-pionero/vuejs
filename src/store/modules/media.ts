@@ -16,6 +16,7 @@ type MediaStateType = {
   isSubmitting: boolean
   directories: MediaItemType[]
   selectedDirectory?: MediaItemType
+  selectedFiles?: Set<string>
 }
 
 export enum EMediaGetters {
@@ -23,14 +24,16 @@ export enum EMediaGetters {
   IS_SUBMITTING = 'isSubmitting',
   DIRECTORIES_REAL = 'directoriesReal',
   DIRECTORIES = 'directories',
-  SELECTED_DIRECTORIES = 'selectedDirectories'
+  SELECTED_DIRECTORIES = 'selectedDirectories',
+  GET_SELECTED_FILES = 'getSelectedFiles'
 }
 
 enum EMediaMutation {
   SET_IS_LOADING = 'SET_IS_LOADING',
   SET_IS_SUBMITTING = 'SET_IS_SUBMITTING',
   SET_DIRECTORIES = 'SET_DIRECTORIES',
-  SET_SELECTED_DIRECTORY = 'SET_SELECTED_DIRECTORY'
+  SET_SELECTED_DIRECTORY = 'SET_SELECTED_DIRECTORY',
+  SET_SELECTED_FILES = 'SET_SELECTED_FILES'
 }
 
 export enum EMediaAction {
@@ -39,7 +42,8 @@ export enum EMediaAction {
   CREATE_FOLDER = 'CREATE_FOLDER',
   UPLOAD_FILE = 'UPLOAD_FILE',
   DELETE_FILE_OR_FOLDER = 'DELETE_FILE_OR_FOLDER',
-  RENAME_FILE_OF_FOLDER = 'RENAME_FILE_OF_FOLDER'
+  RENAME_FILE_OF_FOLDER = 'RENAME_FILE_OF_FOLDER',
+  HANDLE_SET_SELECTED_FILES = 'HANDLE_SET_SELECTED_FILES'
 }
 
 const mediaModule: Module<MediaStateType, RootStateTypes> = {
@@ -47,14 +51,16 @@ const mediaModule: Module<MediaStateType, RootStateTypes> = {
   state: {
     isLoading: false,
     isSubmitting: false,
-    directories: []
+    directories: [],
+    selectedFiles: new Set([])
   },
   getters: {
     [EMediaGetters.IS_LOADING]: (state) => state.isLoading,
     [EMediaGetters.IS_SUBMITTING]: (state) => state.isSubmitting,
     [EMediaGetters.DIRECTORIES]: (state) => state.selectedDirectory?.children ?? state.directories,
     [EMediaGetters.SELECTED_DIRECTORIES]: (state) => state.selectedDirectory,
-    [EMediaGetters.DIRECTORIES_REAL]: (state) => state.directories
+    [EMediaGetters.DIRECTORIES_REAL]: (state) => state.directories,
+    [EMediaGetters.GET_SELECTED_FILES]: (state) => state.selectedFiles
   },
   mutations: {
     [EMediaMutation.SET_IS_LOADING](state, payload) {
@@ -68,6 +74,9 @@ const mediaModule: Module<MediaStateType, RootStateTypes> = {
     },
     [EMediaMutation.SET_SELECTED_DIRECTORY](state, payload) {
       state.selectedDirectory = payload
+    },
+    [EMediaMutation.SET_SELECTED_FILES](state, payload) {
+      state.selectedFiles = payload
     }
   },
   actions: {
@@ -133,6 +142,9 @@ const mediaModule: Module<MediaStateType, RootStateTypes> = {
       } finally {
         commit(EMediaMutation.SET_IS_SUBMITTING, false)
       }
+    },
+    [EMediaAction.HANDLE_SET_SELECTED_FILES]({ commit }, payload) {
+      commit(EMediaMutation.SET_SELECTED_FILES, payload)
     }
   }
 }

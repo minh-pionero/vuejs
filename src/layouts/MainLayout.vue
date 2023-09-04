@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '@/assets/main.css'
 import { ref, computed } from 'vue'
 
 import TheSidebar from '@/layouts/TheSidebar.vue'

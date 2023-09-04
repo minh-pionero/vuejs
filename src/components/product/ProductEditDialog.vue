@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import { createProductApi, getProductCategoriesApi } from '@/services/product.service'
+import {
+  createProductApi,
+  getProductCategoriesApi,
+  updateProductApi
+} from '@/services/product.service'
 import { useFormRules } from '@/utils/formRules'
+import MediaModal from '@/components/modals/MediaModal.vue'
+import { useQueryClient } from '@tanstack/vue-query'
+import type { PropType } from 'vue'
+import type { ProductType } from '@/types/product.type'
 
 const props = defineProps({
   isOpenDialog: {
@@ -14,30 +22,29 @@ const props = defineProps({
     required: true
   },
   product: {
-    type: Object,
+    type: Object as PropType<ProductType>,
     required: false,
     default: null
-  },
-  onRefreshProducts: {
-    type: Function,
-    required: true
   }
 })
 
+const queryClient = useQueryClient()
+
 const { ruleRequired } = useFormRules()
 const isSubmitting = ref(false)
+const isOpenMediaDialog = ref(false)
 const categories = ref<Array<{ value: number; title: string }>>([])
 const formDefault = {
-  name: null,
-  category_id: null,
-  price: null,
-  thumbnail: 'https://kenh14cdn.com/thumb_w/660/2020/7/17/brvn-15950048783381206275371.jpg',
-  images: '',
+  name: props?.product?.name ?? null,
+  category_id: props?.product?.categoryId ?? null,
+  price: props?.product?.price ?? null,
+  thumbnail: props?.product?.thumbnail ?? null,
+  // images: '',
   is_active: true,
-  short_description: '',
-  description: '',
-  source: '',
-  preview_source_url: '',
+  short_description: props?.product?.shortDescription ?? '',
+  description: props?.product?.description ?? '',
+  // source: '',
+  // preview_source_url: '',
   is_virtual_product: false
 }
 const form = reactive(formDefault)
@@ -58,18 +65,31 @@ onMounted(() => {
 const submit = async () => {
   try {
     isSubmitting.value = true
-    const formData = new FormData()
-    formData.append('name', form.name ?? '')
-    formData.append('category_id', form.category_id ?? '')
-    formData.append('price', form.price ?? '')
-    formData.append('thumbnail', form.thumbnail)
-    if (form.short_description) formData.append('short_description', form.short_description)
-    if (form.description) formData.append('description', form.description)
 
-    await createProductApi(formData)
+    if (props?.product) {
+      const payload: any = {
+        id: props.product.id,
+        ...form
+      }
+
+      if (!payload.short_description) delete payload?.short_description
+      if (!payload.description) delete payload.description
+
+      await updateProductApi(payload)
+    } else {
+      const formData = new FormData()
+      formData.append('name', form.name ?? '')
+      if (form.category_id) formData.append('category_id', form.category_id as any)
+      if (form.price) formData.append('price', form.price as any)
+      if (form.thumbnail) formData.append('thumbnail', form.thumbnail)
+      if (form.short_description) formData.append('short_description', form.short_description)
+      if (form.description) formData.append('description', form.description)
+      await createProductApi(formData)
+    }
+
     props.onCloseDialog()
     resetForm()
-    props.onRefreshProducts()
+    queryClient.refetchQueries(['getProducts'])
   } catch (e) {
     //
   } finally {
@@ -83,6 +103,7 @@ const resetForm = () => {
   form.price = formDefault.price
   form.short_description = formDefault.short_description
   form.description = formDefault.description
+  form.thumbnail = formDefault.thumbnail
 }
 </script>
 
@@ -142,10 +163,21 @@ const resetForm = () => {
                   :rules="[ruleRequired]"
                 ></v-select>
                 <div class="mb-6">
-                  <v-btn> <VIcon icon="mdi-paperclip" />Choose Thumbnail </v-btn>
-                </div>
-                <div>
-                  <v-btn> <VIcon icon="mdi-paperclip" />Choose Images </v-btn>
+                  <div class="mb-6 flex justify-between align-center">
+                    <v-btn @click="isOpenMediaDialog = true">
+                      <VIcon icon="mdi-paperclip" />Choose Thumbnail
+                    </v-btn>
+
+                    <v-btn
+                      v-if="!!form.thumbnail"
+                      icon="mdi-trash-can-outline"
+                      class="text-red"
+                      @click="form.thumbnail = null"
+                    />
+                  </div>
+                  <div v-if="!!form.thumbnail">
+                    <VImg :src="form.thumbnail" />
+                  </div>
                 </div>
               </v-col>
             </v-row>
@@ -154,4 +186,16 @@ const resetForm = () => {
       </v-form>
     </v-card>
   </v-dialog>
+  <MediaModal
+    :is-open="isOpenMediaDialog"
+    @on-close="isOpenMediaDialog = false"
+    :on-save="
+      (values:string[]) => {
+        if(values?.length)
+        {
+          form.thumbnail = values[0] as any
+        }
+      }
+    "
+  />
 </template>

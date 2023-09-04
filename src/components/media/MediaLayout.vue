@@ -9,6 +9,13 @@ import { EMediaGetters, EMediaAction } from '@/store/modules/media'
 import MediaRenameDialog from './MediaRenameDialog.vue'
 import type { MediaItemType } from '@/types/media.type'
 
+defineProps({
+  isSelectMode: {
+    type: Boolean,
+    required: false
+  }
+})
+
 const store = useStore('media')
 const directories = computed(() => store.getters(EMediaGetters.DIRECTORIES))
 const selectedDirectories = computed((): MediaItemType | undefined =>
@@ -78,7 +85,7 @@ const onClickUploadFile = () => {
         </div>
       </template>
       <template v-else v-for="item in directories" :key="item.key">
-        <MediaItem :item="item" />
+        <MediaItem :item="item" :is-select-mode="isSelectMode" />
       </template>
     </div>
   </template>

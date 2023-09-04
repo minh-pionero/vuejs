@@ -1,34 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import ProductTable from '@/components/product/ProductTable.vue'
 import ProductEditDialog from '@/components/product/ProductEditDialog.vue'
 import { getProductsApi } from '@/services/product.service'
 import type { ResponseProductType } from '@/types/product.type'
-import { watch } from 'vue'
+import { useQuery } from '@tanstack/vue-query'
 
 const isLoading = ref<boolean>(false)
 const isOpenCreateProductDialog = ref(false)
 const page = ref(1)
-const responseProducts = ref<ResponseProductType>()
 
-const getProducts = async (page?: number) => {
-  try {
-    isLoading.value = true
-    const res = await getProductsApi(page ?? 0)
-    responseProducts.value = res
-  } catch (e) {
-    //
-  } finally {
-    isLoading.value = false
+const { data: products } = useQuery<ResponseProductType>({
+  queryKey: ['getProducts', page.value],
+  queryFn: async () => {
+    return await getProductsApi(page.value ?? 0)
   }
-}
-
-onMounted(() => {
-  getProducts()
-})
-
-watch(page, (val) => {
-  getProducts(val)
 })
 </script>
 
@@ -44,14 +30,9 @@ watch(page, (val) => {
       >Create product</v-btn
     >
   </div>
-  <ProductTable :products="responseProducts?.data ?? []" :is-loading="isLoading" />
-  <div class="d-flex justify-end mt-2" v-if="responseProducts?.meta.last_page">
-    <VPagination
-      v-model="page"
-      :length="responseProducts?.meta.last_page"
-      :total-visible="7"
-      :size="40"
-    />
+  <ProductTable :products="products?.data ?? []" :is-loading="isLoading" />
+  <div class="d-flex justify-end mt-2" v-if="products?.meta.last_page">
+    <VPagination v-model="page" :length="products?.meta.last_page" :total-visible="7" :size="40" />
   </div>
 
   <ProductEditDialog
@@ -61,6 +42,5 @@ watch(page, (val) => {
         isOpenCreateProductDialog = false
       }
     "
-    :on-refresh-products="getProducts"
   />
 </template>
