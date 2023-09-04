@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import ProfileModal from '@/components/modals/ProfileModal.vue'
+import { getProfileApi } from '@/services/user.service'
+import { useQuery } from '@tanstack/vue-query'
+import { ref } from 'vue'
+
 defineProps({
   onToggleSidebar: {
     type: Function,
@@ -6,9 +11,24 @@ defineProps({
   }
 })
 
+const isOpenProfile = ref(false)
+
+const { data: user } = useQuery<any>({
+  queryKey: ['getUser'],
+  queryFn: async () => {
+    const { data } = await getProfileApi()
+    return data
+  }
+})
+
 const items = [
-  { title: 'Hi, Minh Luu!' },
-  { title: 'Profile' },
+  { title: `Welcome!` },
+  {
+    title: 'Profile',
+    onClick: () => {
+      isOpenProfile.value = true
+    }
+  },
   { title: 'Update password' },
   { title: 'Logout' }
 ]
@@ -24,15 +44,16 @@ const items = [
     </template>
     <template v-slot:append>
       <v-avatar color="surface-variant" size="35" id="menu-activator">
-        <span class="text-h6">ML</span>
+        <VImg src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460" />
       </v-avatar>
     </template>
   </v-app-bar>
   <v-menu activator="#menu-activator">
     <v-list>
       <v-list-item v-for="(item, index) in items" :key="index" :value="index">
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
+        <v-list-item-title @click="() => item?.onClick?.()">{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-menu>
+  <ProfileModal :is-open="isOpenProfile" :user="user" @on-close="isOpenProfile = false" />
 </template>
