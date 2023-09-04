@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import ProfileModal from '@/components/modals/ProfileModal.vue'
 import UpdatePasswordModal from '@/components/modals/UpdatePasswordModal.vue'
+import router from '@/router'
 import { getProfileApi } from '@/services/user.service'
+import { AuthMutationTypes } from '@/store/modules/auth/mutations'
+import { useStore } from '@/store/useStore'
 import { useQuery } from '@tanstack/vue-query'
 import { ref } from 'vue'
 
@@ -14,6 +17,7 @@ defineProps({
 
 const isOpenProfile = ref(false)
 const isOpenUpdatePassword = ref(false)
+const store = useStore('auth')
 
 const { data: user } = useQuery<any>({
   queryKey: ['getUser'],
@@ -37,7 +41,13 @@ const items = [
       isOpenUpdatePassword.value = true
     }
   },
-  { title: 'Logout' }
+  {
+    title: 'Logout',
+    onClick: () => {
+      store.dispatch(AuthMutationTypes.LOGOUT)
+      router.push('/login')
+    }
+  }
 ]
 </script>
 
