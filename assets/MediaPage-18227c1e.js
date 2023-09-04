@@ -1,0 +1,1 @@
+import{_ as e}from"./MediaLayout.vue_vue_type_script_setup_true_lang-09ff307f.js";import{d as o,o as a,c as r}from"./index-fccdf61c.js";import"./useStore-9ef4082a.js";const p=o({__name:"MediaPage",setup(t){return(_,c)=>(a(),r(e))}});export{p as default};

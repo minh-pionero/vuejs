@@ -1,0 +1,1 @@
+import{_ as e,o,b as t,j as s}from"./index-fccdf61c.js";const n={},c={class:"d-flex justify-center align-center h-100"},r=s("h1",null,"Oops, it looks like the page you're looking for doesn't exist.",-1),a=[r];function _(i,l){return o(),t("div",c,a)}const f=e(n,[["render",_]]);export{f as default};
