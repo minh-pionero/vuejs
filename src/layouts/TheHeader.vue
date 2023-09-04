@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProfileModal from '@/components/modals/ProfileModal.vue'
+import UpdatePasswordModal from '@/components/modals/UpdatePasswordModal.vue'
 import { getProfileApi } from '@/services/user.service'
 import { useQuery } from '@tanstack/vue-query'
 import { ref } from 'vue'
@@ -12,6 +13,7 @@ defineProps({
 })
 
 const isOpenProfile = ref(false)
+const isOpenUpdatePassword = ref(false)
 
 const { data: user } = useQuery<any>({
   queryKey: ['getUser'],
@@ -29,7 +31,12 @@ const items = [
       isOpenProfile.value = true
     }
   },
-  { title: 'Update password' },
+  {
+    title: 'Update password',
+    onClick: () => {
+      isOpenUpdatePassword.value = true
+    }
+  },
   { title: 'Logout' }
 ]
 </script>
@@ -56,4 +63,5 @@ const items = [
     </v-list>
   </v-menu>
   <ProfileModal :is-open="isOpenProfile" :user="user" @on-close="isOpenProfile = false" />
+  <UpdatePasswordModal :is-open="isOpenUpdatePassword" @on-close="isOpenUpdatePassword = false" />
 </template>
